@@ -13,7 +13,7 @@ BIN_DIR = bin
 TARGET = dbot
 
 # Source Files
-SOURCES = $(SRC_DIR)/dbot.c $(SRC_DIR)/utils.c $(SRC_DIR)/actions.c
+SOURCES = $(SRC_DIR)/dbot.c $(SRC_DIR)/utils.c $(SRC_DIR)/actions.c $(SRC_DIR)/dbase.c
 OBJECTS = $(SOURCES:.c=.o)
 
 # Default rule

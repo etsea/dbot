@@ -1,0 +1,8 @@
+# Ignore `bin` directory
+/bin/
+
+# Ignore the config.json file
+/config.json
+
+# Ignore object files
+*.o

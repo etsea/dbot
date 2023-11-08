@@ -2,7 +2,7 @@
 
 # Compiler and Flags
 CC = zig cc
-CFLAGS = -pthread -DCCORD_SIGINTCATCH
+CFLAGS = -pthread -DCCORD_SIGINTCATCH -O3
 LIBS = -ldiscord -lcurl -lsqlite3
 
 # Source and Output Directories

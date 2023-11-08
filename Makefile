@@ -1,7 +1,7 @@
-# Makefile for compiling a Discord bot using Zig
+# Makefile for compiling DBOT
 
 # Compiler and Flags
-CC = zig cc
+CC = $(shell which zig > /dev/null 2>&1 && echo "zig cc" || echo "gcc")
 CFLAGS = -pthread -DCCORD_SIGINTCATCH -O3
 LIBS = -ldiscord -lcurl -lsqlite3
 

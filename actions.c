@@ -17,6 +17,7 @@
 #define ID_MAT      343223573806317572
 #define ID_RUB      623685890824470548
 #define ID_DEATH    905121536686579733
+#define ID_DOUG     304132255650152448
 
 void on_ready(struct discord *client, const struct discord_ready *event) {
     const char *ready_string = "DBOT successfully connected to Discord as %s#%s!";
@@ -69,9 +70,15 @@ void send_announcement(struct discord *client, const struct discord_message *eve
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
-    if (event->author->id == ID_ROS) {
+    if (event->author->id == ID_TOTS) {
         discord_create_reaction(client, event->channel_id, event->id,
                                 0, "\xF0\x9F\x8D\x86", NULL);
+    } else if (event->author->id == ID_ORESMUN) {
+        discord_create_reaction(client, event->channel_id, event->id,
+                                0, "\xF0\x9F\xA4\xA1", NULL);
+    } else if (event->author->id == ID_DOUG) {
+        discord_create_reaction(client, event->channel_id, event->id,
+                                0, "\xF0\x9F\x90\x94", NULL);
     }
 
     if (event->author->id == ID_TOTS && strcasestr(event->content, "hello") == 0) {

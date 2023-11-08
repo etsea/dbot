@@ -69,7 +69,7 @@ void send_announcement(struct discord *client, const struct discord_message *eve
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
-    if (event->author->id == ID_TOTS) {
+    if (event->author->id == ID_ROS) {
         discord_create_reaction(client, event->channel_id, event->id,
                                 0, "\xF0\x9F\x8D\x86", NULL);
     }

@@ -79,6 +79,9 @@ void on_message_create(struct discord *client, const struct discord_message *eve
     } else if (event->author->id == ID_DOUG) {
         discord_create_reaction(client, event->channel_id, event->id,
                                 0, "\xF0\x9F\x90\x94", NULL);
+    } else if (event->author->id == ID_ROS) {
+        discord_create_reaction(client, event->channel_id, event->id,
+                                0, "\xF0\x9F\x96\x95", NULL);
     }
 
     if (event->author->id == ID_TOTS && strcasestr(event->content, "hello") == 0) {

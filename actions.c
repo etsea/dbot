@@ -19,6 +19,81 @@
 #define ID_DEATH    905121536686579733
 #define ID_DOUG     304132255650152448
 
+typedef struct {
+    char *name;
+    char *unicode;
+} Emoji;
+
+Emoji emojis[] = {
+    {
+        "eggplant",
+        "\xf0\x9f\x8d\x86"
+    },
+    {
+        "clown",
+        "\xf0\x9f\xa4\xa1"
+    },
+    {
+        "clown",
+        "\xf0\x9f\xa4\xa1"
+    },
+    {
+        "chicken",
+        "\xf0\x9f\x90\x94"
+    },
+    {
+        "beer-mugs",
+        "\xf0\x9f\x8d\xbb"
+    },
+    {
+        "hand-vulcan",
+        "\xf0\x9f\x96\x96"
+    },
+    {
+        "hand-vulcan",
+        "\xf0\x9f\x96\x96"
+    },
+    {
+        "hand-middle-finger",
+        "\xf0\x9f\x96\x95"
+    },
+    {
+        "hand-horns",
+        "\xf0\x9f\xa4\x98"
+    },
+    {
+        "ninja",
+        "\xf0\x9f\xa5\xb7"
+    },
+    {
+        "two-men",
+        "\xf0\x9f\x91\xac"
+    },
+    {
+        "100-points",
+        "\xf0\x9f\x92\xaf"
+    },
+    {
+        "tp-roll",
+        "\xf0\x9f\xa7\xbb"
+    },
+};
+
+char *get_emoji(const char *name) {
+    for (int i = 0; i < sizeof(emojis) / sizeof(emojis[0]); i++) {
+        if (strcmp(emojis[i].name, name) == 0) {
+            return emojis[i].unicode;
+        }
+    }
+    return NULL;
+}
+
+char *get_random_emoji() {
+    int random = rand() % (sizeof(emojis) / sizeof(emojis[0]));
+    return emojis[random].unicode;
+}
+
+
 void on_ready(struct discord *client, const struct discord_ready *event) {
     const char *ready_string = "DBOT successfully connected to Discord as %s#%s!";
     log_info(ready_string, event->user->username, event->user->discriminator);
@@ -70,18 +145,11 @@ void send_announcement(struct discord *client, const struct discord_message *eve
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
-    if (event->author->id == ID_TOTS) {
+    char *emoji = get_random_emoji();
+
+    if (rand() % 100 < 33) {
         discord_create_reaction(client, event->channel_id, event->id,
-                                0, "\xF0\x9F\x8D\x86", NULL);
-    } else if (event->author->id == ID_ORESMUN) {
-        discord_create_reaction(client, event->channel_id, event->id,
-                                0, "\xF0\x9F\xA4\xA1", NULL);
-    } else if (event->author->id == ID_DOUG) {
-        discord_create_reaction(client, event->channel_id, event->id,
-                                0, "\xF0\x9F\x90\x94", NULL);
-    } else if (event->author->id == ID_ROS) {
-        discord_create_reaction(client, event->channel_id, event->id,
-                                0, "\xF0\x9F\x96\x95", NULL);
+                                0, emoji, NULL);
     }
 
     if (event->author->id == ID_TOTS && strcasestr(event->content, "hello") == 0) {

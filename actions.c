@@ -7,6 +7,8 @@
 #include "utils.h"
 #include "dbase.h"
 
+#define SQLITE_DB "/etc/dbot/dbot_counts.db"
+
 void on_ready(struct discord *client, const struct discord_ready *event) {
     const char *ready_string = "DBOT successfully connected to Discord as %s#%s!";
     log_info(ready_string, event->user->username, event->user->discriminator);
@@ -46,53 +48,70 @@ void send_announcement(struct discord *client, const struct discord_message *eve
     char announce[256];
 
     char *base_msg = get_random_message_template();
-    sprintf(announce, base_msg, name, word, count);
+    snprintf(announce, 256, base_msg, name, word, count);
 
     struct discord_create_message params = {
         .content = announce,
     };
 
-    discord_create_message(client, 1171550749407313950, &params, NULL);
+    discord_create_message(client, event->channel_id, &params, NULL);
 }
 
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
+    if (event->author->id == 572541399745167390) {
+        discord_create_reaction(client, event->channel_id, event->id,
+                                0, ":eggplant:", NULL);
+    }
+
     if (event->author->id == 572541399745167390 && strcasestr(event->content, "hello") == 0) {
-        int tots_count = check_count("counts.db", "Tots");
-        send_announcement(client, event, tots_count, "Tots", "hello");
-        log_info("Tots said hello %d times!", tots_count);
-        increment_count("counts.db", "Tots");
+        int count = check_count(SQLITE_DB, "Tots");
+        send_announcement(client, event, count, "Tots", "hello");
+        log_info("Tots said hello %d times!", count);
+        increment_count(SQLITE_DB, "Tots");
 
     } else if (event->author->id == 217825266246877184 && strcasestr(event->content, "nagger") == 0) {
-        int ros_count = check_count("counts.db", "Ros");
-        send_announcement(client, event, ros_count, "Ros", "nagger");
-        log_info("Ros said nagger %d times!", ros_count);
-        increment_count("counts.db", "Ros");
+        int count = check_count(SQLITE_DB, "Ros");
+        send_announcement(client, event, count, "Ros", "nagger");
+        log_info("Ros said nagger %d times!", count);
+        increment_count(SQLITE_DB, "Ros");
 
     } else if (event->author->id == 145303994959527937 && strcasestr(event->content, "bro") == 0) {
-        int oresmun_count = check_count("counts.db", "Oresmun");
-        send_announcement(client, event, oresmun_count, "Oresmun", "bro");
-        log_info("Oresmun said bro %d times!", oresmun_count);
-        increment_count("counts.db", "Oresmun");
+        int count = check_count(SQLITE_DB, "Oresmun");
+        send_announcement(client, event, count, "Oresmun", "bro");
+        log_info("Oresmun said bro %d times!", count);
+        increment_count(SQLITE_DB, "Oresmun");
         
     } else if (event->author->id == 169188484303552517 && strcasestr(event->content, "what doin") == 0) {
-        int jin_count = check_count("counts.db", "Jin");
-        send_announcement(client, event, jin_count, "Jin", "what doin");
-        log_info("Jin said what doin %d times!", jin_count);
-        increment_count("counts.db", "Jin");
+        int count = check_count(SQLITE_DB, "Jin");
+        send_announcement(client, event, count, "Jin", "what doin");
+        log_info("Jin said what doin %d times!", count);
+        increment_count(SQLITE_DB, "Jin");
         
     } else if (event->author->id == 430820138254860328 && strcasestr(event->content, "help") == 0) {
-        int cato_count = check_count("counts.db", "Cato");
-        send_announcement(client, event, cato_count, "Cato", "help");
-        log_info("Cato said help %d times!", cato_count);
-        increment_count("counts.db", "Cato");
+        int count = check_count(SQLITE_DB, "Cato");
+        send_announcement(client, event, count, "Cato", "help");
+        log_info("Cato said help %d times!", count);
+        increment_count(SQLITE_DB, "Cato");
 
     } else if (event->author->id == 343223573806317572 & strcasestr(event->content, "rub") == 0) {
-        int mat_count = check_count("counts.db", "Mat");
-        send_announcement(client, event, mat_count, "Mat", "rub");
-        log_info("Mat said rub %d times!", mat_count);
-        increment_count("counts.db", "Mat");
+        int count = check_count(SQLITE_DB, "Mat");
+        send_announcement(client, event, count, "Mat", "rub");
+        log_info("Mat said rub %d times!", count);
+        increment_count(SQLITE_DB, "Mat");
+
+    } else if (event->author->id == 623685890824470548 & strcasestr(event->content, "fuck") == 0) {
+        int count = check_count(SQLITE_DB, "Rub");
+        send_announcement(client, event, count, "Rub", "fuck");
+        log_info("Rub said fuck %d times!", count);
+        increment_count(SQLITE_DB, "Rub");
+
+    } else if (event->author->id == 905121536686579733 & strcasestr(event->content, "key") == 0) {
+        int count = check_count(SQLITE_DB, "Death");
+        send_announcement(client, event, count, "Death", "keys");
+        log_info("Death said key %d times!", count);
+        increment_count(SQLITE_DB, "Death");
 
     } 
 }

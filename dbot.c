@@ -7,6 +7,8 @@
 #include "utils.h"
 #include "actions.h"
 
+#define DBOT_CONFIG_FILE "/etc/dbot/config.json"
+
 void print_usage() {
     int terminal_width = get_terminal_width();
     static const char* header = "DBOT: A Discord bot written in C";
@@ -28,15 +30,12 @@ void print_usage() {
     print_newlines(1);
     draw_line(terminal_width, '=');
 
-    printf("PRESS ENTER TO START BOT\n");
-    wait_for_enter();
     print_newlines(2);
 }
 
 int main(int argc, char* argv[]) {
 
-    const char *config_file = "../config.json";
-    int hello_count = 0;
+    const char *config_file = DBOT_CONFIG_FILE;
     
     ccord_global_init();
     struct discord *client = discord_config_init(config_file);

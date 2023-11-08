@@ -71,7 +71,7 @@ void on_message_create(struct discord *client, const struct discord_message *eve
 
     if (event->author->id == ID_TOTS) {
         discord_create_reaction(client, event->channel_id, event->id,
-                                0, "eggplant", NULL);
+                                0, "\xF0\x9F\x8D\x86", NULL);
     }
 
     if (event->author->id == ID_TOTS && strcasestr(event->content, "hello") == 0) {

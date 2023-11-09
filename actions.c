@@ -234,9 +234,8 @@ int is_user_id_in_array(u64snowflake id) {
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
-    char *emoji = get_random_emoji();
-
     if (rand() % 100 < 33) {
+        char *emoji = get_random_emoji();
         discord_create_reaction(client, event->channel_id, event->id,
                                 0, emoji, NULL);
     }

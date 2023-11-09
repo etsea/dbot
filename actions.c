@@ -240,6 +240,18 @@ void on_message_create(struct discord *client, const struct discord_message *eve
                                 0, emoji, NULL);
     }
 
+    if (event->author->id == find_user_id_by_name("Rub")) {
+        if (strcasestr(event->content, "make tots feel better") == 0) {
+            char *announce = "Tots, you are a beautiful person and I love you. \xF0\x9F\x98\xBB";
+
+            struct discord_create_message params = {
+                .content = announce,
+            };
+
+            discord_create_message(client, event->channel_id, &params, NULL);
+        }
+    }
+
     if (is_user_id_in_array(event->author->id) == 1) {
         UserInfo *user_info = find_user_info_by_id(event->author->id);
         if (user_info != NULL) {

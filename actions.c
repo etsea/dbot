@@ -240,7 +240,7 @@ void on_message_create(struct discord *client, const struct discord_message *eve
                                 0, emoji, NULL);
     }
 
-    if (event->author->id == find_user_id_by_name("Rub")) {
+    if (event->author->id == 623685890824470548) {
         if (strcasestr(event->content, "make tots feel better") == 0) {
             char *announce = "Tots, you are a beautiful person and I love you. \xF0\x9F\x98\xBB";
 

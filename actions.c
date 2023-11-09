@@ -105,14 +105,4 @@ void on_message_create(struct discord *client, const struct discord_message *eve
             }
         }   
     }
-
-    if (strcasestr(event->content, "please make tots feel better") == 0) {
-        char *announce = "Tots, you are a beautiful person and I love you. \xF0\x9F\x98\xBB";
-
-        struct discord_create_message params = {
-            .content = announce,
-        };
-
-        discord_create_message(client, event->channel_id, &params, NULL);
-    }
 }

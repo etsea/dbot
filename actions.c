@@ -241,7 +241,7 @@ void on_message_create(struct discord *client, const struct discord_message *eve
     }
 
     if (event->author->id == 623685890824470548) {
-        if (strcasestr(event->content, "make tots feel better") == 0) {
+        if (strcasestr(event->content, "better") == 0) {
             char *announce = "Tots, you are a beautiful person and I love you. \xF0\x9F\x98\xBB";
 
             struct discord_create_message params = {

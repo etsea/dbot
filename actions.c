@@ -240,6 +240,15 @@ void on_message_create(struct discord *client, const struct discord_message *eve
                                 0, emoji, NULL);
     }
 
+    if (is_user_id_in_array(event->author->id) == 1) {
+        UserInfo *user_info = find_user_info_by_id(event->author->id);
+        if (user_info != NULL) {
+            if (strcasestr(event->content, user_info->trigger_word) == 0) {
+                on_word_trigger(client, event, user_info->name, user_info->trigger_word);
+            }
+        }   
+    }
+
     if (strcasestr(event->content, "please make tots feel better") == 0) {
         char *announce = "Tots, you are a beautiful person and I love you. \xF0\x9F\x98\xBB";
 
@@ -248,14 +257,5 @@ void on_message_create(struct discord *client, const struct discord_message *eve
         };
 
         discord_create_message(client, event->channel_id, &params, NULL);
-    }
-
-    if (is_user_id_in_array(event->author->id) == 1) {
-        UserInfo *user_info = find_user_info_by_id(event->author->id);
-        if (user_info != NULL) {
-            if (strcasestr(event->content, user_info->trigger_word) == 0) {
-                on_word_trigger(client, event, user_info->name, user_info->trigger_word);
-            }
-        }   
     }
 }

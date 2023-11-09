@@ -97,3 +97,50 @@ int increment_count(char *dbname, char *name) {
 
     return 0; // Success
 }
+
+#include <stdio.h>
+#include <sqlite3.h>
+
+int callback(void *NotUsed, int argc, char **argv, char **azColName){
+    NotUsed = 0;
+    
+    // Assuming the first column is the name and the second column is the score
+    if (argc == 2) {
+        printf("%s - %s\n", argv[0], argv[1]);
+    }
+
+    return 0;
+}
+
+int print_mplus_leaderboards(char *dbname) {
+    sqlite3 *db;
+    char *err_msg = 0;
+    int rc;
+
+    // Open the database
+    rc = sqlite3_open(dbname, &db);
+    if (rc != SQLITE_OK) {
+        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+        sqlite3_close(db);
+        return 1;
+    }
+
+    // SQL query
+    char *sql = "SELECT c.name, m.score FROM mythic_plus_scores m "
+                "INNER JOIN characters c ON m.character_id = c.id "
+                "ORDER BY m.score DESC";
+
+    // Execute SQL query
+    rc = sqlite3_exec(db, sql, callback, 0, &err_msg);
+    
+    if (rc != SQLITE_OK ) {
+        fprintf(stderr, "SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        return 1;
+    }
+
+    // Close the database connection
+    sqlite3_close(db);
+    return 0;
+}

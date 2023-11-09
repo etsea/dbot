@@ -105,4 +105,14 @@ void on_message_create(struct discord *client, const struct discord_message *eve
             }
         }   
     }
+    
+    /* FEATURE TESTING
+     * THESE FUNCTIONS ARE ONLY TRIGGERED
+     * ON THE TEST SERVER */
+
+    if (event->guild_id == 1171468612670857217) {
+        if (event->author->id == 623685890824470548) {
+            print_mplus_leaderboards("mplus.db");
+        }
+    }
 }

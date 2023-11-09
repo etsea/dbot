@@ -9,15 +9,88 @@
 
 #define SQLITE_DB "/etc/dbot/dbot_counts.db"
 
-#define ID_TOTS     572541399745167390
-#define ID_ROS      217825266246877184
-#define ID_ORESMUN  145303994959527937
-#define ID_JIN      169188484303552517
-#define ID_CATO     430820138254860328
-#define ID_MAT      343223573806317572
-#define ID_RUB      623685890824470548
-#define ID_DEATH    905121536686579733
-#define ID_DOUG     304132255650152448
+typedef struct {
+    u64snowflake id;
+    char *name;
+    char *trigger_word;
+} UserInfo;
+
+UserInfo user_db[] = {
+    {
+        572541399745167390,
+        "Tots",
+        "hello"
+    },
+    {
+        217825266246877184,
+        "Ros",
+        "nagger"
+    },
+    {
+        145303994959527937,
+        "Oresmun",
+        "bro"
+    },
+    {
+        169188484303552517,
+        "Jin",
+        "what doin"
+    },
+    {
+        430820138254860328,
+        "Cato",
+        "help"
+    },
+    {
+        343223573806317572,
+        "Mat",
+        "rub"
+    },
+    {
+        623685890824470548,
+        "Rub",
+        "wtf"
+    },
+    {
+        905121536686579733,
+        "Death",
+        "key"
+    },
+    {
+        304132255650152448,
+        "Doug",
+        "fuck"
+    }
+};
+
+const size_t NUM_USERS = sizeof(user_db) / sizeof(user_db[0]);
+
+UserInfo* find_user_info_by_name(char *name) {
+    for (size_t i = 0; i < NUM_USERS; ++i) {
+        if (strcmp(user_db[i].name, name) == 0) {
+            return &user_db[i];
+        }
+    }
+    return NULL; // name was not found
+}
+
+UserInfo* find_user_info_by_id(u64snowflake id) {
+    for (size_t i = 0; i < NUM_USERS; ++i) {
+        if (user_db[i].id == id) {
+            return &user_db[i];
+        }
+    }
+    return NULL; // id was not found
+}
+
+u64snowflake find_user_id_by_name(char *name) {
+    for (size_t i = 0; i < NUM_USERS; ++i) {
+        if (strcmp(user_db[i].name, name) == 0) {
+            return user_db[i].id;
+        }
+    }
+    return 0; // name was not found
+}
 
 typedef struct {
     char *name;
@@ -142,6 +215,22 @@ void send_announcement(struct discord *client, const struct discord_message *eve
     discord_create_message(client, event->channel_id, &params, NULL);
 }
 
+void on_word_trigger(struct discord *client, const struct discord_message *event, char *name, char *word) {
+    int count = check_count(SQLITE_DB, name);
+    send_announcement(client, event, count, name, word);
+    log_info("%s said %s %d times!", name, word, count);
+    increment_count(SQLITE_DB, name);
+}
+
+int is_user_id_in_array(u64snowflake id) {
+    for (size_t i = 0; i < NUM_USERS; ++i) {
+        if (user_db[i].id == id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void on_message_create(struct discord *client, const struct discord_message *event) {
     if (event->author->bot) return;
 
@@ -152,53 +241,12 @@ void on_message_create(struct discord *client, const struct discord_message *eve
                                 0, emoji, NULL);
     }
 
-    if (event->author->id == ID_TOTS && strcasestr(event->content, "hello") == 0) {
-        int count = check_count(SQLITE_DB, "Tots");
-        send_announcement(client, event, count, "Tots", "hello");
-        log_info("Tots said hello %d times!", count);
-        increment_count(SQLITE_DB, "Tots");
-
-    } else if (event->author->id == ID_ROS && strcasestr(event->content, "nagger") == 0) {
-        int count = check_count(SQLITE_DB, "Ros");
-        send_announcement(client, event, count, "Ros", "nagger");
-        log_info("Ros said nagger %d times!", count);
-        increment_count(SQLITE_DB, "Ros");
-
-    } else if (event->author->id == ID_ORESMUN && strcasestr(event->content, "bro") == 0) {
-        int count = check_count(SQLITE_DB, "Oresmun");
-        send_announcement(client, event, count, "Oresmun", "bro");
-        log_info("Oresmun said bro %d times!", count);
-        increment_count(SQLITE_DB, "Oresmun");
-        
-    } else if (event->author->id == ID_JIN && strcasestr(event->content, "what doin") == 0) {
-        int count = check_count(SQLITE_DB, "Jin");
-        send_announcement(client, event, count, "Jin", "what doin");
-        log_info("Jin said what doin %d times!", count);
-        increment_count(SQLITE_DB, "Jin");
-        
-    } else if (event->author->id == ID_CATO && strcasestr(event->content, "help") == 0) {
-        int count = check_count(SQLITE_DB, "Cato");
-        send_announcement(client, event, count, "Cato", "help");
-        log_info("Cato said help %d times!", count);
-        increment_count(SQLITE_DB, "Cato");
-
-    } else if (event->author->id == ID_MAT & strcasestr(event->content, "rub") == 0) {
-        int count = check_count(SQLITE_DB, "Mat");
-        send_announcement(client, event, count, "Mat", "rub");
-        log_info("Mat said rub %d times!", count);
-        increment_count(SQLITE_DB, "Mat");
-
-    } else if (event->author->id == ID_RUB & strcasestr(event->content, "fuck") == 0) {
-        int count = check_count(SQLITE_DB, "Rub");
-        send_announcement(client, event, count, "Rub", "fuck");
-        log_info("Rub said fuck %d times!", count);
-        increment_count(SQLITE_DB, "Rub");
-
-    } else if (event->author->id == ID_DEATH & strcasestr(event->content, "key") == 0) {
-        int count = check_count(SQLITE_DB, "Death");
-        send_announcement(client, event, count, "Death", "keys");
-        log_info("Death said key %d times!", count);
-        increment_count(SQLITE_DB, "Death");
-
-    } 
+    if (is_user_id_in_array(event->author->id) == 1) {
+        UserInfo *user_info = find_user_info_by_id(event->author->id);
+        if (user_info != NULL) {
+            if (strcasestr(event->content, user_info->trigger_word) == 0) {
+                on_word_trigger(client, event, user_info->name, user_info->trigger_word);
+            }
+        }   
+    }
 }

@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     discord_set_on_ready(client, &on_ready);
     discord_set_on_message_create(client, &on_message_create);
 
-    print_usage();
+//    print_usage();
 
     discord_run(client);
 
